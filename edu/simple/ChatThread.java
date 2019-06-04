@@ -106,7 +106,7 @@ public class ChatThread extends Thread{
 				
 				if (!isBan) {
 					if(line.equals("/quit")) {
-						ChatServer.writeBanList();
+						ChatServer.getIdArray().remove(currentThread());
 						break;
 					}
 					

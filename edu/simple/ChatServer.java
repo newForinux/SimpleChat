@@ -36,37 +36,36 @@ public class ChatServer {
 	} // main
 
 	public static void writeBanList() {
-		FileWriter fw = null;
-		BufferedWriter bw = null;
+		File file = new File ("banlist.txt");
 		
 		try {
-				
-			fw = new FileWriter("banlist.txt");	
-			bw = new BufferedWriter(bw);
+			PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+			for (String line : banlist)
+				pw.println(line);
 			
-			for (String ban : banlist) {
-				bw.write(ban);
-				bw.newLine();
-			}
+			pw.close();
 			
-			bw.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} /*finally {
-			try {fw.close();} catch (IOException e) {}
-			try {bw.close();} catch (IOException e) {}
-		}*/
+		}
 	}
 	
 	public static void readBanList() {
 		FileReader rw = null;
 		BufferedReader br = null;
 		
-		try {
+		File check = new File("banlist.txt"); 
+		
+		if (!check.exists()) {
+			try {
+				check.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 			
-			File check = new File("banlist.txt");
-			if (!check.isFile())
-				writeBanList();
+		
+		try {
 			
 			rw = new FileReader("banlist.txt");	
 			br = new BufferedReader(rw);
