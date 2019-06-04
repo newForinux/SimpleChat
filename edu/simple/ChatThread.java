@@ -87,7 +87,7 @@ public class ChatThread extends Thread{
 		PrintWriter pw = hm.get(id);
 		
 		ChatServer.getBanlist().add(line.substring(start, end));
-		
+		ChatServer.writeBanList();
 		pw.println("successfully added.");
 		pw.flush();
 	}
