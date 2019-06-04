@@ -15,7 +15,6 @@ public class ChatThread extends Thread{
 	private ArrayList<ChatThread> result = new ArrayList<ChatThread>();
 	
 	//Ban word is array of String that searched.
-	private String[] ban = {"Lotto", "Curse", "Riverpool", "Cigarette", "suicide"};
 	
 	public String getusrId() {
 		return id;
@@ -71,28 +70,51 @@ public class ChatThread extends Thread{
 		pw.flush();
 	}
 	
+	public void manage_spam() {
+		PrintWriter pw = hm.get(id);
+		
+		pw.println("ban word list_____");
+		for (String ban : ChatServer.getBanlist()) {
+			pw.println(ban);
+		}
+		
+		pw.flush();
+	}
+	
+	public void add_spam(String line) {
+		int start = line.indexOf(" ") + 1;
+		int end = line.length();
+		PrintWriter pw = hm.get(id);
+		
+		ChatServer.getBanlist().add(line.substring(start, end));
+		
+		pw.println("successfully added.");
+		pw.flush();
+	}
+	
+	
 	public void run(){
 		try{
 			String line = null;
 			while((line = br.readLine()) != null){
 				
 				//searching which the message sending from user includes ban word
-				for (String banner : ban) {
+				for (String banner : ChatServer.getBanlist()) {
 					if (line.indexOf(banner) > -1)
 						isBan = true;
 				}
 				
 				if (!isBan) {
-					if(line.equals("/quit"))
+					if(line.equals("/quit")) {
+						ChatServer.writeBanList();
 						break;
+					}
 					
 					else if (line.equals("/spamlist"))
 						manage_spam();
 					
 					else if (line.indexOf("/addspam") == 0) {
-						int index = line.indexOf("/addspam ");
-						String ban = line.substring(index, )
-						add_spam();
+						add_spam(line);
 					}
 					
 					//When user writes "/userlist", call send_userlist method
@@ -111,7 +133,9 @@ public class ChatThread extends Thread{
 					send_warning();
 					isBan = false;
 				}
+				
 			}
+			
 		}catch(Exception ex){
 			System.out.println(ex);
 		}finally{
